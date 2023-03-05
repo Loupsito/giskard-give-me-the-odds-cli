@@ -12,9 +12,10 @@ def read_json(file_path: str) -> Dict[str, Any]:
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Read 2 JSON files')
-    parser.add_argument('file1', type=str, help='path to the first JSON file')
-    parser.add_argument('file2', type=str, help='path to the second JSON file')
+    parser = argparse.ArgumentParser(
+        description='Gives the Millennium Falcon ship\'s odds of success in completing its mission')
+    parser.add_argument('millennium_falcon.json', type=str, help='Path to the millennium_falcon.json file')
+    parser.add_argument('empire.json', type=str, help='Path to the empire.json file')
     args = parser.parse_args()
 
     millennium_falcon_json = read_json(args.file1)
