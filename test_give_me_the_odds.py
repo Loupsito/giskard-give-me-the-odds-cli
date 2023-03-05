@@ -17,9 +17,30 @@ class TestReadJson(unittest.TestCase):
         self.file2 = os.path.join(self.test_dir, 'test_file2.json')
 
         with open(self.file1, 'w') as f:
-            json.dump({'a': 1, 'b': 2}, f)
+            json.dump({
+                "autonomy": 6,
+                "departure": "Tatooine",
+                "arrival": "Endor",
+                "routes_db": "universe.db"
+            }, f)
         with open(self.file2, 'w') as f:
-            json.dump({'c': 3, 'd': 4}, f)
+            json.dump({
+                "countdown": 8,
+                "bounty_hunters": [
+                    {
+                        "planet": "Hoth",
+                        "day": 6
+                    },
+                    {
+                        "planet": "Hoth",
+                        "day": 7
+                    },
+                    {
+                        "planet": "Hoth",
+                        "day": 8
+                    }
+                ]
+            }, f)
 
     def tearDown(self):
         os.remove(self.file1)
@@ -27,9 +48,16 @@ class TestReadJson(unittest.TestCase):
 
     def test_read_json(self):
         data = read_json(self.file1)
-        self.assertEqual(data, {'a': 1, 'b': 2})
+        self.assertEqual(data, {
+            "autonomy": 6,
+            "departure": "Tatooine",
+            "arrival": "Endor",
+            "routes_db": "universe.db"
+        })
 
-    def test_main(self):
+    @patch('requests.post')
+    def test_main(self, mock_post):
+        mock_post.return_value.json.return_value = {"value": 81.0}
         captured_output = io.StringIO()
         args = [self.file1, self.file2]
 
@@ -37,7 +65,7 @@ class TestReadJson(unittest.TestCase):
             with contextlib.redirect_stdout(captured_output):
                 main()
 
-        expected_output = "{'a': 1, 'b': 2}\n{'c': 3, 'd': 4}\n"
+        expected_output = "81.0\n"
         self.assertEqual(expected_output, captured_output.getvalue())
 
 
