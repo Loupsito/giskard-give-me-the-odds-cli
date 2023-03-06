@@ -13,17 +13,17 @@ class TestReadJson(unittest.TestCase):
 
     def setUp(self):
         self.test_dir = os.path.dirname(os.path.abspath(__file__))
-        self.file1 = os.path.join(self.test_dir, 'test_file1.json')
-        self.file2 = os.path.join(self.test_dir, 'test_file2.json')
+        self.millennium_falcon = os.path.join(self.test_dir, 'test_millennium_falcon.json')
+        self.empire = os.path.join(self.test_dir, 'test_empire.json')
 
-        with open(self.file1, 'w') as f:
+        with open(self.millennium_falcon, 'w') as f:
             json.dump({
                 "autonomy": 6,
                 "departure": "Tatooine",
                 "arrival": "Endor",
                 "routes_db": "universe.db"
             }, f)
-        with open(self.file2, 'w') as f:
+        with open(self.empire, 'w') as f:
             json.dump({
                 "countdown": 8,
                 "bounty_hunters": [
@@ -43,11 +43,11 @@ class TestReadJson(unittest.TestCase):
             }, f)
 
     def tearDown(self):
-        os.remove(self.file1)
-        os.remove(self.file2)
+        os.remove(self.millennium_falcon)
+        os.remove(self.empire)
 
     def test_read_json(self):
-        data = read_json(self.file1)
+        data = read_json(self.millennium_falcon)
         self.assertEqual(data, {
             "autonomy": 6,
             "departure": "Tatooine",
@@ -59,9 +59,9 @@ class TestReadJson(unittest.TestCase):
     def test_main(self, mock_post):
         mock_post.return_value.json.return_value = {"value": 81.0}
         captured_output = io.StringIO()
-        args = [self.file1, self.file2]
+        args = [self.millennium_falcon, self.empire]
 
-        with patch('argparse.ArgumentParser.parse_args', return_value=argparse.Namespace(file1=args[0], file2=args[1])):
+        with patch('argparse.ArgumentParser.parse_args', return_value=argparse.Namespace(millennium_falcon=args[0], empire=args[1])):
             with contextlib.redirect_stdout(captured_output):
                 main()
 
